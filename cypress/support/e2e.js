@@ -14,6 +14,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+import '@bahmutov/cy-api'
 import './commands'
 import '@shelex/cypress-allure-plugin';
 require('cypress-grep')()

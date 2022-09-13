@@ -25,6 +25,8 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 /// <reference types="Cypress" />
+ import auth from '../fixtures/auth.json'
+
 
 Cypress.Commands.add('navigate', (route) => {
     cy.intercept(route).as('loadpage')
@@ -33,17 +35,18 @@ Cypress.Commands.add('navigate', (route) => {
 })
 
 Cypress.Commands.add("login", (email, senha) => {
-    cy.get('[data-test="login-email"] > .MuiInputBase-root > .MuiInputBase-input').type(email)
-    cy.get('[data-test="login-password"] > .MuiInputBase-root > .MuiInputBase-input').type(senha)
+    cy.visit('login')
+    cy.get('[data-test="login-email"]').type(email)   
+    cy.get('[data-test="login-password"]').type(senha)
     cy.get('[data-test="login-submit"]').click()
 })
 
 Cypress.Commands.add("cadastro", (nome, email, senha) => {
     cy.get('[data-test="register-name"] > .MuiInputBase-root > .MuiInputBase-input').type(nome, email, senha)
     cy.get('[data-test="register-email"]').type(email)
-    cy.get('[data-test="register-password"] > .MuiInputBase-root > .MuiInputBase-input').type(senha, { log: false })
-    cy.get('[data-test="register-password2"] > .MuiInputBase-root > .MuiInputBase-input').type(senha, { log: false })
-    cy.get('[data-test="register-submit"]').click()
+    cy.get('[data-test="register-password"] > .MuiInputBase-root > .MuiInputBase-input').type(senha, { log: true })
+    cy.get('[data-test="register-password2"] > .MuiInputBase-root > .MuiInputBase-input').type(senha, { log: true })
+    cy.get('[data-test="register-submit"]').click()   
 })
 
 Cypress.Commands.add("perfil", (empresa, conhecimento, biografia ) => {
@@ -54,4 +57,38 @@ Cypress.Commands.add("perfil", (empresa, conhecimento, biografia ) => {
     cy.get('[data-test="profile-skills"] > .MuiInputBase-root > .MuiInputBase-input').type(conhecimento)
     cy.get('[rows="1"]').type(biografia,{delay:0})
     cy.get('[data-test="profile-submit"]').click()
+   
 })
+Cypress.Commands.add("tokenJWT",()=>{
+    cy.request({
+        method:'POST',
+        url:'/api/auth',
+        body:auth
+    }).then((response)=>{
+        return response.body.jwt
+    })
+})
+
+Cypress.Commands.add("criarPostagem",(token, value)=>{
+    cy.request({
+        method:'POST',
+        url:'/api/posts',
+        headers: {
+            Cookie: token
+        },
+        body:{
+            text: value
+        }
+    })
+})
+
+Cypress.Commands.add("criarPerfil",()=>{
+    cy.request({
+        method:'POST',
+        url:'/api/profile',
+        body:profile
+    }).then((response)=>{
+        return response.body._id
+    })
+})
+

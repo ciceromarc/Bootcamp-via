@@ -4,7 +4,7 @@ import util from '../utils'
 const el = require('./LoginElements').authElements
 class AuthPage {
     validateLogin() {
-        cy.get(el.MENSAGEM.WELCOME).should('contain', 'Identificação')
+        cy.get(el.MENSAGEM.WELCOME).should('contain', 'IdentificaÃ§Ã£o')
         cy.get(el.MENSAGEM.INFORMATIVE).should('contain', 'Para continuar, preencha com o seu CPF ou CNPJ')
         cy.get(el.LOGIN.USERNAME).should('be.visible')
         cy.get(el.LOGIN.BTN_CONTINUE_LOGIN, { timeout: 3000 }).should('be.visible')
